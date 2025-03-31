@@ -13,7 +13,7 @@
 -- Общее количество подчиненных у каждого сотрудника (включая их подчиненных).
 -- Если у сотрудника нет назначенных проектов или задач, отобразить NULL.
 
-WITH RECURSIVE ManagerHierarchy AS (
+WITH RECURSIVE manager_hierarchy AS (
     SELECT e.EmployeeID, e.Name, e.ManagerID, e.DepartmentID, e.RoleID, e.EmployeeID AS RootManagerID
     FROM 
         Employees e
@@ -30,7 +30,7 @@ WITH RECURSIVE ManagerHierarchy AS (
     
     SELECT sub.EmployeeID, sub.Name, sub.ManagerID, sub.DepartmentID, sub.RoleID, mh.RootManagerID
     FROM 
-        Employees sub INNER JOIN ManagerHierarchy mh ON (sub.ManagerID = mh.EmployeeID)
+        Employees sub INNER JOIN manager_hierarchy mh ON (sub.ManagerID = mh.EmployeeID)
 )
 SELECT 
     m.RootManagerID AS EmployeeID,
@@ -50,11 +50,11 @@ SELECT
 	) AS TaskNames,
     (
 		 SELECT COUNT(*) - 1 
-	     FROM ManagerHierarchy mh_count 
+	     FROM manager_hierarchy mh_count 
 	     WHERE mh_count.RootManagerID = emp.EmployeeID
 	) AS TotalSubordinates
 FROM 
-    (SELECT DISTINCT RootManagerID FROM ManagerHierarchy) m
+    (SELECT DISTINCT RootManagerID FROM manager_hierarchy) m
 	INNER JOIN Employees emp 
     	ON m.RootManagerID = emp.EmployeeID
 	LEFT JOIN Departments d 

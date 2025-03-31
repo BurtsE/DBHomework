@@ -13,14 +13,14 @@
 -- Общее количество подчиненных у каждого сотрудника (не включая подчиненных их подчиненных).
 -- Если у сотрудника нет назначенных проектов или задач, отобразить NULL.
 
-WITH RECURSIVE Subordinates AS (
+WITH RECURSIVE subordinates AS (
     SELECT EmployeeID, Name as EmployeeName, ManagerID, DepartmentID, RoleID
     FROM Employees
     WHERE ManagerID = 1  
     UNION ALL
     SELECT e.EmployeeID, e.Name, e.ManagerID, e.DepartmentID, e.RoleID
     FROM Employees e
-    	INNER JOIN Subordinates s 
+    	INNER JOIN subordinates s 
         ON e.ManagerID = s.EmployeeID  
 )
 SELECT s.EmployeeID, s.EmployeeName, s.ManagerID, d.DepartmentName, r.RoleName,

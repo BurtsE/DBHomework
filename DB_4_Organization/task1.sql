@@ -18,7 +18,7 @@
 -- Результаты должны быть отсортированы по имени сотрудника.
 -- Решение задачи должно представлять из себя один sql-запрос и задействовать ключевое слово RECURSIVE.
 
-WITH RECURSIVE Subordinates AS (
+WITH RECURSIVE subordinates AS (
     SELECT EmployeeID, Name, ManagerID, DepartmentID, RoleID
     FROM 
         Employees
@@ -29,7 +29,7 @@ WITH RECURSIVE Subordinates AS (
     FROM 
         Employees e
     INNER JOIN 
-        Subordinates s ON (e.ManagerID = s.EmployeeID)
+        subordinates s ON (e.ManagerID = s.EmployeeID)
 )
 SELECT 
     s.EmployeeID, s.Name, s.ManagerID,
@@ -46,7 +46,7 @@ SELECT
         WHERE t.AssignedTo = s.EmployeeID
     ), 'NULL') AS Tasks                                
 FROM 
-    Subordinates s
+    subordinates s
 	LEFT JOIN 
 	    Departments d ON (s.DepartmentID = d.DepartmentID)
 	LEFT JOIN 
